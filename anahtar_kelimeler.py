@@ -1,4 +1,6 @@
-A = [ "zaman serileri",
+A = ["python", 
+     "kurulum",
+     "zaman serileri",
      "lag",
     "üretken",
     "accuracy",
