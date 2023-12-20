@@ -1,4 +1,6 @@
-A = [ 
+A = [ "zaman serileri",
+     "lag",
+    "üretken",
     "accuracy",
 "veri",
 "anlamadım",
