@@ -1,7 +1,7 @@
 A = ["python",
      "kod",
      "komut",
-     "terminal,
+     "terminal",
      "vm",
      "sanal",
      "sorun",
