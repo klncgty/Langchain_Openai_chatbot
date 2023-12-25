@@ -57,8 +57,10 @@ class DiscordService:
             image_url = message.attachments[0].url
             image_bytes = await self.fetch_image_data(image_url)
             text_result = self.extract_text_from_image(image_bytes)
-            
-            await channel.send(f"Metin içeren görselde bulunan metin: {text_result}")
+            content = f"{content} Bu hatayı şu adımlarla çözebiliriz."
+            gpt_answer_combined = self.assistant.process_message(content, image_text=text_result)
+            await channel.send(gpt_answer_combined)
+            #await channel.send(f"Metin içeren görselde bulunan metin: {text_result}")
             
         else:
             await channel.send("Ben Miuul path yapay zeka botuyum. Bu konularda sorunuz varsa size yardımcı olmayı çok isterim. Başka konularda yardımcı")
