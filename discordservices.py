@@ -64,8 +64,8 @@ class DiscordService:
         elif "teşekkür" in content:
             await channel.send(f" {message.author.mention} Ne demek, rica ederim. İyi çalışmalar! :)")
 
-        elif "selam" in content or "naber" in content or "merhaba" in content:
-            await channel.send(f" {message.author.mention} Merhaba! Ben Miuul yapay zeka botuyum. Size nasıl yardımcı olabilirim :) ")
+        #elif "selam" in content or "naber" in content or "merhaba" in content:
+           # await channel.send(f" {message.author.mention} Merhaba! Ben Miuul yapay zeka botuyum. Size nasıl yardımcı olabilirim :) ")
             
             
         elif "cake" in content:
