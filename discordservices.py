@@ -27,30 +27,33 @@ class DiscordService:
             return
 
         elif any(keyword in content for keyword in ["fiyat", "ücret", "miuul"]):
-            await channel.send("Miuul Eğitimleri ile ilgili mentorlerimize direkt mesaj yoluyla danışabilirsiniz :)")
+            await channel.send(f"{message.author.mention} Miuul Eğitimleri ile ilgili mentorlerimize direkt mesaj yoluyla danışabilirsiniz :)")
             await channel.send("Detaylı bilgi için Miuul Bootcamp kataloğunu inceleyebilirsiniz: [Miuul Katalog](https://miuul.com/katalog?tur=bootcamp)")
 
         elif "path" in content and "bootcamp" in content:
-            await channel.send("Bootcamp programında program öncesi ön hazırlık eğitimi, canlı mentor desteği, Vahit Keskin ile birlikte haftalık recap, takım çalışması ve IK ve teknik mülakatlar gibi içerikler mevcuttur.")
+            await channel.send(f"{message.author.mention} Bootcamp programında program öncesi ön hazırlık eğitimi, canlı mentor desteği, Vahit Keskin ile birlikte haftalık recap, takım çalışması ve IK ve teknik mülakatlar gibi içerikler mevcuttur.")
             await channel.send("[MIUUL](https://www.miuul.com/)'a tıklayarak tüm detaylara ulaşabilirsiniz. Daha detaylı bilgiler için mentorlerimizden de destek alabilirsiniz :)")
 
         elif "bootcamp" in content:
-            await channel.send("Bootcamp programında program öncesi ön hazırlık eğitimi, canlı mentor desteği, Vahit Keskin ile birlikte haftalık recap, takım çalışması ve IK ve teknik mülakatlar gibi içerikler mevcuttur.")
+            await channel.send(f"{message.author.mention} Bootcamp programında program öncesi ön hazırlık eğitimi, canlı mentor desteği, Vahit Keskin ile birlikte haftalık recap, takım çalışması ve IK ve teknik mülakatlar gibi içerikler mevcuttur.")
             await channel.send("Miuul Bootcamp kataloğunu inceleyebilirsiniz: [Miuul Bootcamp Kataloğu](https://miuul.com/katalog?tur=bootcamp)")
 
         elif "path" in content:
-            await channel.send("Path programında eğitimler tekildir ve kendi öğrenme hızınıza göre takip ediyor olacaksınız. Tüm içeriklere 1 yıl erişim hakkınız bulunmaktadır. Sorularınız olması durumunda da mentorlarımız ile 7/24 iletişim kurarak süreci ilerletiyor olacaksınız.")
+            await channel.send(f"{message.author.mention} Path programında eğitimler tekildir ve kendi öğrenme hızınıza göre takip ediyor olacaksınız. Tüm içeriklere 1 yıl erişim hakkınız bulunmaktadır. Sorularınız olması durumunda da mentorlarımız ile 7/24 iletişim kurarak süreci ilerletiyor olacaksınız.")
             await channel.send("Bu linkten Miuul Path kataloğunu inceleyebilirsiniz: [Miuul Path Kataloğu](https://www.miuul.com/katalog?tur=kariyer&gclid=CjwKCAjw9-6oBhBaEiwAHv1QvKewPIfjJ78iUKuZGDVMbO5MZDFINlIG62Yssx8rcEmw0jiqH1Tv1RoC24QQAvD_BwE)")
 
         elif "teşekkür" in content:
-            await channel.send("Ne demek, rica ederim. İyi çalışmalar! :)")
+            await channel.send(f" {message.author.mention} Ne demek, rica ederim. İyi çalışmalar! :)")
 
         elif "selam" in content or "naber" in content or "merhaba" in content:
-            await channel.send("Merhaba! Ben Miuul yapay zeka botuyum. Size nasıl yardımcı olabilirim :) ")
+            await channel.send(f" {message.author.mention} Merhaba! Ben Miuul yapay zeka botuyum. Size nasıl yardımcı olabilirim :) ")
+        
+        elif "cake" in content:
+            await channel.send(f" {message.author.mention} Olsa da yesek be  :d ")
 
         elif any(kelime.lower() in content for kelime in A):
-            await channel.send('Cevabınızı düşünüyorum!')
-            gpt_answer = self.assistant.process_message(message)
+            await channel.send(f"{message.author.mention} Cevabınızı düşünüyorum!")
+            gpt_answer = self.assistant.process_message(message.content)
             await channel.send(gpt_answer)
 
         elif message.attachments and any(attachment.filename.lower().endswith(('png', 'jpg', 'jpeg', 'gif')) for attachment in message.attachments):
@@ -58,12 +61,12 @@ class DiscordService:
             image_bytes = await self.fetch_image_data(image_url)
             text_result = self.extract_text_from_image(image_bytes)
             content = f"{content} Bu hatayı şu adımlarla çözebiliriz."
-            gpt_answer_combined = self.assistant.process_message(content, image_text=text_result)
-            await channel.send(gpt_answer_combined)
+            gpt_answer_combined = self.assistant.process_message(content.content, image_text=text_result)
+            await channel.send(f"{message.author.mention}, {gpt_answer_combined}")
             #await channel.send(f"Metin içeren görselde bulunan metin: {text_result}")
             
         else:
-            await channel.send("Ben Miuul path yapay zeka botuyum. Bu konularda sorunuz varsa size yardımcı olmayı çok isterim. Başka konularda yardımcı")
+            await channel.send(f"{message.author.mention} Ben Miuul path yapay zeka botuyum. Bu konularda sorunuz varsa size yardımcı olmayı çok isterim.")
 
     async def fetch_image_data(self, url):
         async with aiohttp.ClientSession() as session:
