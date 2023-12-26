@@ -6,13 +6,17 @@ from PIL import Image
 import io
 import numpy as np
 from anahtar_kelimeler import A
+import re
+import nltk
+from nltk.stem import SnowballStemmer
 
 class DiscordService:
     def __init__(self, client, assistant):
         self.client = client
         self.assistant = assistant
         self.reader = Reader(['en'])
-
+        nltk.download('punkt') 
+        self.stemmer = SnowballStemmer("english")        
     async def on_message(self, message):
         await self.handle_message(message)
 
@@ -23,9 +27,24 @@ class DiscordService:
         channel = message.channel
         content = message.content.lower()
 
+        tokens = nltk.word_tokenize(content)
+        lemmatized_words = [self.stemmer.stem(token) for token in tokens]
+        roots = ', '.join(lemmatized_words)
+        print(roots)
+        
+        has_visual_keywords = any(keyword in content for keyword in ["ekran görüntüsü", "fotograf", "görsel", "ekte"])
+        has_attachments = message.attachments and any(attachment.filename.lower().endswith(('png', 'jpg', 'jpeg', 'gif')) for attachment in message.attachments)
+
+        
+        
         if message.author == self.client.user:
             return
+        
+        
+        elif has_visual_keywords and not has_attachments:
+            await channel.send(f"{message.author.mention} Lütfen hatanın ekran görüntüsünü paylaşınız.")
 
+        
         elif any(keyword in content for keyword in ["fiyat", "ücret", "miuul"]):
             await channel.send(f"{message.author.mention} Miuul Eğitimleri ile ilgili mentorlerimize direkt mesaj yoluyla danışabilirsiniz :)")
             await channel.send("Detaylı bilgi için Miuul Bootcamp kataloğunu inceleyebilirsiniz: [Miuul Katalog](https://miuul.com/katalog?tur=bootcamp)")
@@ -47,14 +66,18 @@ class DiscordService:
 
         elif "selam" in content or "naber" in content or "merhaba" in content:
             await channel.send(f" {message.author.mention} Merhaba! Ben Miuul yapay zeka botuyum. Size nasıl yardımcı olabilirim :) ")
-        
+            
+            
         elif "cake" in content:
-            await channel.send(f" {message.author.mention} Olsa da yesek be  :d ")
+            await channel.send(f" {message.author.mention} Olsa da yesek be ")
 
-        elif any(kelime.lower() in content for kelime in A):
+        elif any(kelime.lower() in lemmatized_words for kelime in A):
             await channel.send(f"{message.author.mention} Cevabınızı düşünüyorum!")
             gpt_answer = self.assistant.process_message(message.content)
             await channel.send(gpt_answer)
+            await asyncio.sleep(1)
+
+            await channel.send("\n Eğer çözüm işe yaramadıysasize daha iyi yardımcı olabilmem için ekran görüntüsü de paylaşabilirsiniz.")
 
         elif message.attachments and any(attachment.filename.lower().endswith(('png', 'jpg', 'jpeg', 'gif')) for attachment in message.attachments):
             image_url = message.attachments[0].url
